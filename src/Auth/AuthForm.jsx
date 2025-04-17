@@ -54,7 +54,7 @@
 // export default AuthForm;
 
 import React from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useFormik } from 'formik';
 import validationSchema from './Validation';
@@ -70,8 +70,11 @@ const AuthForm = () => {
     validationSchema: validationSchema, // optional if using Yup
     onSubmit: async (values) => {
       try {
-        await signInWithEmailAndPassword(auth, values.email, values.password);
+       const data= await signInWithEmailAndPassword(auth, values.email, values.password)
         // alert("Logged in!");
+        console.log(data?.user?.accessToken);
+        localStorage.setItem('accessToken', data?.user?.accessToken);
+        localStorage.setItem('user', JSON.stringify(data?.user));
         toast.success('Logged in successfully!')
         navigate('/dashboard');
       } catch (err) {
